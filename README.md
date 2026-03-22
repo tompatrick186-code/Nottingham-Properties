@@ -1,4 +1,4 @@
-# Nottingham Properties
+# J & H Holdings Ltd
 
 A premium property management website built with Astro, Tailwind CSS, and several third-party integrations.
 

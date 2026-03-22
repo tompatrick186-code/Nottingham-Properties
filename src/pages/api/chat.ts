@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ reply: "I'm sorry, I'm not able to respond right now. Please call us on 0115 900 1234 or email hello@nottinghamproperties.co.uk." }),
+      JSON.stringify({ reply: "I'm sorry, I'm not able to respond right now. Please call us on 0115 900 1234 or email hello@jhholdings.co.uk." }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   }
@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const { messages = [], userInfo = {} } = body;
 
-  const systemPrompt = `You are a friendly, helpful assistant for Nottingham Properties — a private landlord managing quality residential flats across Nottingham, England.
+  const systemPrompt = `You are a friendly, helpful assistant for J & H Holdings Ltd — a private landlord managing quality residential flats across Nottingham, England.
 
 Your tone is warm, professional, and very British. You should:
 - Use British English (flat, not apartment; tenancy, not lease; estate agent, etc.)
@@ -38,7 +38,7 @@ Key info:
 - No agency fees
 - Private landlord — direct contact
 - Phone: 0115 900 1234
-- Email: hello@nottinghamproperties.co.uk
+- Email: hello@jhholdings.co.uk
 - Applications: proof of income (3x monthly rent), references, ID required
 - Deposits: equivalent to 5 weeks' rent, held with TDS
 - Viewings: available Mon–Sat by appointment

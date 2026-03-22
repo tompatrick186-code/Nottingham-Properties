@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 
 export const POST: APIRoute = async ({ request }) => {
   const resendKey = import.meta.env.RESEND_API_KEY;
-  const landlordEmail = import.meta.env.LANDLORD_EMAIL || 'hello@nottinghamproperties.co.uk';
+  const landlordEmail = import.meta.env.LANDLORD_EMAIL || 'hello@jhholdings.co.uk';
 
   let issueType: string;
   let description: string;
@@ -57,12 +57,12 @@ Description:
 ${description}
 
 ---
-Submitted via the Nottingham Properties Tenant Portal
+Submitted via the J & H Holdings Ltd Tenant Portal
   `.trim();
 
   try {
     await resend.emails.send({
-      from: 'Nottingham Properties Portal <noreply@nottinghamproperties.co.uk>',
+      from: 'J & H Holdings Ltd Portal <noreply@jhholdings.co.uk>',
       to: landlordEmail,
       subject: `${urgencyEmoji} Maintenance Request [${urgency}]: ${issueType}`,
       text: emailBody,

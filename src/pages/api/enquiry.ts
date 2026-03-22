@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Log to console if no Resend key (dev mode)
   const resendKey = import.meta.env.RESEND_API_KEY;
-  const landlordEmail = import.meta.env.LANDLORD_EMAIL || 'hello@nottinghamproperties.co.uk';
+  const landlordEmail = import.meta.env.LANDLORD_EMAIL || 'hello@jhholdings.co.uk';
 
   if (!resendKey) {
     console.log('[ENQUIRY - no Resend key, logging only]', { name, email, phone, propertyId, message });
@@ -42,12 +42,12 @@ Message:
 ${message || 'No message provided'}
 
 ---
-Sent from nottinghamproperties.co.uk
+Sent from jhholdings.co.uk
   `.trim();
 
   try {
     await resend.emails.send({
-      from: 'Nottingham Properties <noreply@nottinghamproperties.co.uk>',
+      from: 'J & H Holdings Ltd <noreply@jhholdings.co.uk>',
       to: landlordEmail,
       replyTo: email,
       subject: `New enquiry${propertyTitle ? ` — ${propertyTitle}` : ''} from ${name}`,
@@ -56,10 +56,10 @@ Sent from nottinghamproperties.co.uk
 
     // Send confirmation to enquirer
     await resend.emails.send({
-      from: 'Nottingham Properties <hello@nottinghamproperties.co.uk>',
+      from: 'J & H Holdings Ltd <hello@jhholdings.co.uk>',
       to: email,
-      subject: 'We received your enquiry — Nottingham Properties',
-      text: `Hi ${name},\n\nThank you for your enquiry${propertyTitle ? ` about ${propertyTitle}` : ''}. We'll be in touch shortly — usually within a few hours.\n\nIn the meantime, feel free to call us on 0115 900 1234.\n\nBest regards,\nNottingham Properties`,
+      subject: 'We received your enquiry — J & H Holdings Ltd',
+      text: `Hi ${name},\n\nThank you for your enquiry${propertyTitle ? ` about ${propertyTitle}` : ''}. We'll be in touch shortly — usually within a few hours.\n\nIn the meantime, feel free to call us on 0115 900 1234.\n\nBest regards,\nJ & H Holdings Ltd`,
     });
 
     return new Response(JSON.stringify({ success: true }), {
