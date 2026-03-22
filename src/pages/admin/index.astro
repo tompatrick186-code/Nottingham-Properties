@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import properties from '../../data/properties.json';
+
+// Simple password check via query param or session
+// In production, use proper auth middleware
+const adminPassword = import.meta.env.ADMIN_PASSWORD;
+const providedPassword = Astro.url.searchParams.get('pw');
+const isAuthed = adminPassword ? providedPassword === adminPassword : providedPassword === 'admin';
+
+const stats = {
+  total: properties.length,
+  available: properties.filter(p => p.available).length,
+  occupied: properties.filter(p => !p.available).length,
+};
+
+// Mock data — in production these would come from a database
+const recentEnquiries = [
+  { id: 'ENQ001', name: 'Marcus Webb', email: 'marcus@email.com', property: 'Lace Market Apartment', date: '2026-03-20', status: 'New' },
+  { id: 'ENQ002', name: 'Lily Chen', email: 'lily.chen@gmail.com', property: 'West Bridgford Garden Flat', date: '2026-03-19', status: 'Responded' },
+  { id: 'ENQ003', name: 'Dan Okafor', email: 'dan.o@outlook.com', property: 'Lace Market Apartment', date: '2026-03-18', status: 'Viewing Booked' },
+];
+
+const openMaintenance = [
+  { id: 'MR001', tenant: 'Sarah Johnson', property: 'Lace Market Apartment', issue: 'Kitchen tap dripping', urgency: 'Low', submitted: '2026-03-10', status: 'In Progress' },
+];
+---
+
+<BaseLayout title="Admin — Nottingham Properties">
+  {!isAuthed ? (
+    <div class="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div class="w-full max-w-sm">
+        <div class="text-center mb-8">
+          <div class="w-10 h-10 bg-charcoal rounded-lg flex items-center justify-center mx-auto mb-4">
+            <svg class="w-5 h-5 text-cream" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h1 class="font-serif text-2xl text-charcoal">Admin Access</h1>
+          <p class="text-gray-500 text-sm mt-1">Enter admin password to continue</p>
+        </div>
+        <form method="GET" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Password</label>
+            <input
+              type="password"
+              name="pw"
+              class="w-full border border-gray-200 rounded-lg text-sm px-3 py-2.5 focus:outline-none focus:border-brick transition-colors"
+              placeholder="••••••••"
+              autofocus
+            />
+          </div>
+          <button type="submit" class="w-full bg-charcoal hover:bg-brick text-cream font-semibold py-3 rounded-lg transition-colors text-sm">
+            Access Admin
+          </button>
+        </form>
+      </div>
+    </div>
+  ) : (
+    <div>
+      <!-- Admin header -->
+      <div class="bg-charcoal text-cream py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <p class="text-gold text-xs font-semibold uppercase tracking-wider mb-1">Admin Dashboard</p>
+            <h1 class="font-serif text-3xl">Nottingham Properties</h1>
+          </div>
+          <a href={`/admin?pw=${providedPassword}`} class="text-cream/60 hover:text-cream text-sm transition-colors">Refresh</a>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <p class="text-2xl font-bold text-charcoal">{stats.total}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mt-0.5">Total Properties</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <p class="text-2xl font-bold text-emerald-600">{stats.available}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mt-0.5">Available</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <p class="text-2xl font-bold text-charcoal">{stats.occupied}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mt-0.5">Occupied</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <p class="text-2xl font-bold text-amber-600">{openMaintenance.length}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mt-0.5">Open Maintenance</p>
+          </div>
+        </div>
+
+        <!-- Properties overview -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-100">
+            <h2 class="font-serif text-xl text-charcoal">Portfolio Overview</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-100">
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Property</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Area</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Rent</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {properties.map(p => (
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-5 py-3 font-medium text-charcoal">{p.title}</td>
+                    <td class="px-5 py-3 text-gray-600">{p.area}</td>
+                    <td class="px-5 py-3 text-charcoal font-semibold">£{p.rent.toLocaleString()}/mo</td>
+                    <td class="px-5 py-3">
+                      <span class={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${p.available ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gray-100 text-gray-600 border border-gray-200'}`}>
+                        {p.available ? 'Available' : 'Let'}
+                      </span>
+                    </td>
+                    <td class="px-5 py-3">
+                      <a href={`/properties/${p.id}`} class="text-brick hover:underline text-xs font-semibold">View</a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent enquiries -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-100">
+            <h2 class="font-serif text-xl text-charcoal">Recent Enquiries</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-100">
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Property</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {recentEnquiries.map(e => (
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-5 py-3 font-medium text-charcoal">{e.name}</td>
+                    <td class="px-5 py-3 text-gray-600">{e.property}</td>
+                    <td class="px-5 py-3 text-gray-600">{new Date(e.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</td>
+                    <td class="px-5 py-3">
+                      <span class={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${
+                        e.status === 'New' ? 'bg-brick/10 text-brick border border-brick/20' :
+                        e.status === 'Responded' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                        'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}>
+                        {e.status}
+                      </span>
+                    </td>
+                    <td class="px-5 py-3">
+                      <a href={`mailto:${e.email}`} class="text-brick hover:underline text-xs">{e.email}</a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="px-5 py-3 border-t border-gray-100 bg-gray-50">
+            <p class="text-xs text-gray-400">Showing mock data. Connect a database to see live enquiries.</p>
+          </div>
+        </div>
+
+        <!-- Maintenance requests -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-100">
+            <h2 class="font-serif text-xl text-charcoal">Open Maintenance Requests</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-100">
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Tenant</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Issue</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Urgency</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Submitted</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {openMaintenance.map(r => (
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-5 py-3 font-medium text-charcoal">{r.tenant}</td>
+                    <td class="px-5 py-3 text-gray-600">{r.issue}</td>
+                    <td class="px-5 py-3">
+                      <span class={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${
+                        r.urgency === 'Urgent' ? 'bg-red-50 text-red-700 border border-red-200' :
+                        r.urgency === 'Medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                        'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}>
+                        {r.urgency}
+                      </span>
+                    </td>
+                    <td class="px-5 py-3 text-gray-600">{new Date(r.submitted).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</td>
+                    <td class="px-5 py-3">
+                      <span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                        {r.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+</BaseLayout>

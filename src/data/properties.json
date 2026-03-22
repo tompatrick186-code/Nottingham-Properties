@@ -1,0 +1,50 @@
+[
+  {
+    "id": "flat-1-lace-market",
+    "title": "Lace Market Apartment",
+    "address": "12 Fletcher Gate, Lace Market, Nottingham, NG1 2FZ",
+    "area": "Lace Market",
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "rent": 1100,
+    "available": true,
+    "availableFrom": "2026-04-01",
+    "photos": ["/images/flat1-1.jpg", "/images/flat1-2.jpg"],
+    "description": "A beautifully presented two-bedroom apartment in the heart of Nottingham's historic Lace Market district. Exposed brick walls, high ceilings and large sash windows give this apartment real character. Walking distance to the city centre, bars, restaurants and tram stops.",
+    "features": ["Exposed brick walls", "High ceilings", "Fully furnished", "Secure entry", "Close to tram", "City centre location"],
+    "lat": 52.9510,
+    "lng": -1.1467
+  },
+  {
+    "id": "flat-2-west-bridgford",
+    "title": "West Bridgford Garden Flat",
+    "address": "34 Melton Road, West Bridgford, Nottingham, NG2 7NE",
+    "area": "West Bridgford",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "rent": 825,
+    "available": true,
+    "availableFrom": "2026-03-15",
+    "photos": ["/images/flat2-1.jpg", "/images/flat2-2.jpg"],
+    "description": "A charming ground-floor flat in the sought-after West Bridgford area. Private garden, off-street parking and recently refurbished kitchen and bathroom. Quiet residential street, excellent local schools and just minutes from the Victoria Embankment.",
+    "features": ["Private garden", "Off-street parking", "Refurbished kitchen", "Ground floor", "Quiet street", "Excellent schools nearby"],
+    "lat": 52.9330,
+    "lng": -1.1290
+  },
+  {
+    "id": "flat-3-beeston",
+    "title": "Beeston Studio Apartment",
+    "address": "8 High Road, Beeston, Nottingham, NG9 2JP",
+    "area": "Beeston",
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "rent": 650,
+    "available": false,
+    "availableFrom": null,
+    "photos": ["/images/flat3-1.jpg"],
+    "description": "A modern, well-equipped studio apartment a short walk from Beeston town centre and the tram line into Nottingham city centre. Ideal for young professionals or students. Bills-included option available.",
+    "features": ["Bills-included option", "Near tram", "Modern kitchen", "Walk-in wardrobe", "Bike storage", "Close to university"],
+    "lat": 52.9270,
+    "lng": -1.2150
+  }
+]

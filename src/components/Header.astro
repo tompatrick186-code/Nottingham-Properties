@@ -1,0 +1,93 @@
+---
+const navLinks = [
+  { href: '/properties', label: 'Properties' },
+  { href: '/map', label: 'Map' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/portal', label: 'Tenant Portal' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="bg-charcoal text-cream sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 bg-brick rounded flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2L2 7.5V16h5v-4h4v4h5V7.5L9 2Z" fill="white"/>
+          </svg>
+        </div>
+        <span class="font-serif text-lg tracking-tight text-cream group-hover:text-gold transition-colors">
+          Nottingham <span class="text-gold">Properties</span>
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class={`text-sm font-sans font-medium tracking-wide transition-colors hover:text-gold ${
+              currentPath.startsWith(link.href) && link.href !== '/'
+                ? 'text-gold'
+                : 'text-cream/80'
+            } ${link.label === 'Tenant Portal' ? 'border border-cream/30 px-4 py-1.5 rounded hover:border-gold hover:text-gold' : ''}`}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden flex flex-col gap-1.5 p-2"
+        aria-label="Open menu"
+        aria-expanded="false"
+      >
+        <span class="w-6 h-0.5 bg-cream transition-all" id="ham-1"></span>
+        <span class="w-6 h-0.5 bg-cream transition-all" id="ham-2"></span>
+        <span class="w-6 h-0.5 bg-cream transition-all" id="ham-3"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-charcoal border-t border-white/10">
+    <nav class="flex flex-col px-4 py-4 gap-4">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="text-cream/80 font-sans font-medium text-base hover:text-gold transition-colors py-1"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const h1 = document.getElementById('ham-1');
+  const h2 = document.getElementById('ham-2');
+  const h3 = document.getElementById('ham-3');
+
+  btn?.addEventListener('click', () => {
+    const isOpen = !menu?.classList.contains('hidden');
+    menu?.classList.toggle('hidden');
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    if (!isOpen) {
+      h1!.style.transform = 'translateY(8px) rotate(45deg)';
+      h2!.style.opacity = '0';
+      h3!.style.transform = 'translateY(-8px) rotate(-45deg)';
+    } else {
+      h1!.style.transform = '';
+      h2!.style.opacity = '';
+      h3!.style.transform = '';
+    }
+  });
+</script>

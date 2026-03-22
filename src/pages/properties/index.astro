@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import properties from '../../data/properties.json';
+
+const url = Astro.url;
+const paramBeds = url.searchParams.get('beds') || 'any';
+const paramArea = url.searchParams.get('area') || 'all';
+const paramMaxRent = parseInt(url.searchParams.get('maxRent') || '9999');
+const paramAvailable = url.searchParams.get('available') || 'all';
+
+const areas = [...new Set(properties.map(p => p.area))].sort();
+
+const filtered = properties.filter(p => {
+  if (paramBeds !== 'any') {
+    if (paramBeds === 'studio' && p.bedrooms !== 0) return false;
+    if (paramBeds === '1' && p.bedrooms !== 1) return false;
+    if (paramBeds === '2' && p.bedrooms !== 2) return false;
+    if (paramBeds === '3+' && p.bedrooms < 3) return false;
+  }
+  if (paramArea !== 'all' && p.area !== paramArea) return false;
+  if (p.rent > paramMaxRent) return false;
+  if (paramAvailable === 'available' && !p.available) return false;
+  return true;
+});
+---
+
+<BaseLayout
+  title="Properties — Nottingham Properties"
+  description="Browse available flats and apartments for rent across Nottingham. Lace Market, West Bridgford, Beeston and more."
+>
+  <!-- Page header -->
+  <div class="bg-charcoal text-cream py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-gold text-sm font-semibold uppercase tracking-wider mb-2">Our Portfolio</p>
+      <h1 class="font-serif text-3xl md:text-4xl">Available Properties</h1>
+      <p class="text-cream/60 mt-2">
+        {filtered.length} propert{filtered.length === 1 ? 'y' : 'ies'} found
+        {paramAvailable === 'available' ? ' — available only' : ''}
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Filters -->
+    <form id="filter-form" method="GET" class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-wrap gap-4 items-end">
+      <!-- Bedrooms -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bedrooms</label>
+        <select name="beds" class="border border-gray-200 rounded-lg text-sm px-3 py-2 text-charcoal focus:outline-none focus:border-brick bg-white min-w-[120px]">
+          <option value="any" selected={paramBeds === 'any'}>Any</option>
+          <option value="studio" selected={paramBeds === 'studio'}>Studio</option>
+          <option value="1" selected={paramBeds === '1'}>1 Bedroom</option>
+          <option value="2" selected={paramBeds === '2'}>2 Bedrooms</option>
+          <option value="3+" selected={paramBeds === '3+'}>3+ Bedrooms</option>
+        </select>
+      </div>
+
+      <!-- Area -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Area</label>
+        <select name="area" class="border border-gray-200 rounded-lg text-sm px-3 py-2 text-charcoal focus:outline-none focus:border-brick bg-white min-w-[150px]">
+          <option value="all" selected={paramArea === 'all'}>All Areas</option>
+          {areas.map(a => (
+            <option value={a} selected={paramArea === a}>{a}</option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Max rent -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+          Max Rent: <span id="rent-label">£{paramMaxRent === 9999 ? 'Any' : paramMaxRent.toLocaleString()}</span>
+        </label>
+        <input
+          type="range"
+          name="maxRent"
+          id="rent-slider"
+          min="400"
+          max="2000"
+          step="50"
+          value={paramMaxRent === 9999 ? 2000 : paramMaxRent}
+          class="accent-brick w-40"
+        />
+        <input type="hidden" name="maxRentActual" id="rent-actual" value={paramMaxRent} />
+      </div>
+
+      <!-- Availability -->
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Availability</label>
+        <select name="available" class="border border-gray-200 rounded-lg text-sm px-3 py-2 text-charcoal focus:outline-none focus:border-brick bg-white min-w-[140px]">
+          <option value="all" selected={paramAvailable === 'all'}>All Properties</option>
+          <option value="available" selected={paramAvailable === 'available'}>Available Now</option>
+        </select>
+      </div>
+
+      <button type="submit" class="bg-brick hover:bg-brick/90 text-white text-sm font-semibold px-5 py-2 rounded-lg transition-colors">
+        Filter
+      </button>
+
+      <a href="/properties" class="text-sm text-gray-500 hover:text-charcoal transition-colors py-2">Clear</a>
+    </form>
+
+    <!-- Results -->
+    {filtered.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filtered.map(p => (
+          <PropertyCard
+            id={p.id}
+            title={p.title}
+            area={p.area}
+            bedrooms={p.bedrooms}
+            bathrooms={p.bathrooms}
+            rent={p.rent}
+            available={p.available}
+            availableFrom={p.availableFrom}
+            photos={p.photos}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+        </div>
+        <h3 class="font-serif text-xl text-charcoal mb-2">No properties found</h3>
+        <p class="text-gray-500 mb-4">Try adjusting your filters or <a href="/properties" class="text-brick underline">view all properties</a>.</p>
+        <a href="/contact" class="inline-flex items-center gap-2 bg-charcoal text-cream text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brick transition-colors">
+          Tell us what you're looking for
+        </a>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<script>
+  const slider = document.getElementById('rent-slider') as HTMLInputElement;
+  const label = document.getElementById('rent-label');
+
+  slider?.addEventListener('input', () => {
+    const val = parseInt(slider.value);
+    if (label) label.textContent = val >= 2000 ? '£Any' : `£${val.toLocaleString()}`;
+    const form = document.getElementById('filter-form') as HTMLFormElement;
+    const hidden = form?.querySelector('[name="maxRent"]') as HTMLInputElement;
+    if (hidden && val < 2000) hidden.value = String(val);
+    else if (hidden) hidden.value = '9999';
+  });
+</script>

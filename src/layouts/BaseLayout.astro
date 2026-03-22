@@ -1,0 +1,71 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Nottingham Properties — Quality Homes Across Nottingham',
+  description = 'A private landlord managing quality residential flats and apartments across Nottingham. Find your next home in Lace Market, West Bridgford, Beeston and beyond.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-GB" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --color-charcoal: #1A1A18;
+        --color-brick: #C4490C;
+        --color-cream: #F5F0E8;
+        --color-gold: #C9A84C;
+      }
+
+      html {
+        font-family: 'DM Sans', sans-serif;
+        color: var(--color-charcoal);
+        background-color: var(--color-cream);
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'DM Serif Display', serif;
+      }
+
+      /* Smooth scrollbar */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--color-cream); }
+      ::-webkit-scrollbar-thumb { background: var(--color-charcoal)/30; border-radius: 3px; }
+
+      /* Focus ring */
+      *:focus-visible {
+        outline: 2px solid var(--color-brick);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body class="bg-cream text-charcoal font-sans antialiased">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <ChatWidget />
+  </body>
+</html>
