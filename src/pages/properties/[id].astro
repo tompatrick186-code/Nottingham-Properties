@@ -81,8 +81,6 @@ function bedroomLabel(n: number) {
               </p>
             </div>
             <div class="text-right">
-              <p class="text-3xl font-bold text-brick">£{property.rent.toLocaleString()}</p>
-              <p class="text-sm text-gray-500">per month</p>
               {property.availableFrom && (
                 <p class="text-xs text-emerald-600 font-medium mt-1">
                   Available from {new Date(property.availableFrom).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}

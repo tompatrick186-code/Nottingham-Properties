@@ -5,14 +5,13 @@ interface Props {
   area: string;
   bedrooms: number;
   bathrooms: number;
-  rent: number;
   available: boolean;
   availableFrom: string | null;
   photos?: string[];
   address?: string;
 }
 
-const { id, title, area, bedrooms, bathrooms, rent, available, availableFrom, photos, address } = Astro.props;
+const { id, title, area, bedrooms, bathrooms, available, availableFrom, photos, address } = Astro.props;
 
 const gradients = [
   'from-stone-300 to-stone-400',
